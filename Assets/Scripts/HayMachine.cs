@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using TMPro;
 
 public class HayMachine : MonoBehaviour
 {
@@ -9,10 +11,20 @@ public class HayMachine : MonoBehaviour
     public Transform haySpawnpoint;
     public float shootInterval;
     private float shootTimer;
+
+    int points = 0;
+    public TextMeshProUGUI pointsText;
+    void addPoint()
+    {
+        points++;
+        pointsText.text = points.ToString();
+    }
+
+    private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -39,6 +51,7 @@ public class HayMachine : MonoBehaviour
     private void ShootHay()
     {
         Instantiate(hayBalePrefab, haySpawnpoint.position, Quaternion.identity);
+        audioSource.Play();
     }
 
     private void UpdateShooting() {
@@ -49,5 +62,14 @@ public class HayMachine : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        Sheep.GotHit += addPoint;
+    }
 
+    // Es OBLIGATORIO desuscribirse cuando el objeto se desactiva para evitar errores de memoria
+    private void OnDisable()
+    {
+        Sheep.GotHit -= addPoint;
+    }
 }

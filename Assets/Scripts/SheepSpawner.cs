@@ -18,20 +18,21 @@ public class SheepSpawner : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void SpawnSheep()
     {
         Vector3 randomPosition = sheepSpawnPositions [Random.Range(0,
-        sheepSpawnPositions .Count)].position; // 1
+            sheepSpawnPositions.Count)].position; // 1
         GameObject sheep = Instantiate(sheepPrefab, randomPosition ,
-        sheepPrefab.transform.rotation); // 2
+            sheepPrefab.transform.rotation); // 2
         sheepList.Add(sheep); // 3
-        sheep.GetComponent<Sheep>().SetSpawner(this); // 4
+        Sheep s = sheep.GetComponent<Sheep>(); // 4
+        s.SetSpawner(this);
+
+        int rand = Random.Range(0, 100);
+
+        if(rand > 89)
+            s.runSpeed += s.runSpeed;
+
     }
 
     private IEnumerator SpawnRoutine() // 1

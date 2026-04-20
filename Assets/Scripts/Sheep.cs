@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Sheep : MonoBehaviour
@@ -10,11 +11,15 @@ public class Sheep : MonoBehaviour
     private Collider myCollider; // 2
     private Rigidbody myRigidbody;
     private SheepSpawner sheepSpawner;
+
+    public static event Action GotHit;
+    private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         myCollider = GetComponent<Collider>();
         myRigidbody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,7 +38,9 @@ public class Sheep : MonoBehaviour
         myRigidbody .isKinematic = false;
         myRigidbody.AddForce(new Vector3(0,50,30), ForceMode.Impulse);
         gameObject.AddComponent<Rotate>().rotationSpeed = new Vector3(-1000,0,0);
+        audioSource.Play();
 
+        GotHit?.Invoke();
 
         Destroy(gameObject, gotHayDestroyDelay); // 3
     }
